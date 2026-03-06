@@ -1,0 +1,11 @@
+﻿<Solution>
+  <Project Path="com.unity.multiplayer-use-cases.tests.editor.csproj" />
+  <Project Path="com.unity.samples.multiplayer-use-cases.proximity.csproj" />
+  <Project Path="com.unity.samples.multiplayer-use-cases.common.csproj" />
+  <Project Path="com.unity.samples.multiplayer-use-cases.netvar.csproj" />
+  <Project Path="com.unity.samples.multiplayer-use-cases.selection-screen.csproj" />
+  <Project Path="Assembly-CSharp-Editor.csproj" />
+  <Project Path="com.unity.samples.multiplayer-use-cases.netvar-vs-rpc.csproj" />
+  <Project Path="Assembly-CSharp.csproj" />
+  <Project Path="com.unity.samples.multiplayer-use-cases.rpc.csproj" />
+</Solution>

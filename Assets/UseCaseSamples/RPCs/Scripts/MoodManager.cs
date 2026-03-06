@@ -16,6 +16,9 @@ namespace Unity.Netcode.Samples.MultiplayerUseCases.RPC
         float m_SecondsBetweenDataChanges;
         float m_ElapsedSecondsSinceLastChange;
 
+        NetworkVariable<Color32> m_NetworkedColor = new NetworkVariable<Color32>();
+        Material m_Material;
+
         readonly string[] s_ChatMessages = new string[]
         {
             "Have a lovely day",
@@ -23,6 +26,28 @@ namespace Unity.Netcode.Samples.MultiplayerUseCases.RPC
             "Today I feel like pineapple!",
             "Wow you're awesome!"
         };
+
+        void Awake()
+        {
+            m_Material = GetComponent<Renderer>().material;
+        }
+
+        public override void OnNetworkSpawn()
+        {
+            base.OnNetworkSpawn();
+            
+            OnClientColorChanged(m_Material.color, m_NetworkedColor.Value);
+            m_NetworkedColor.OnValueChanged += OnClientColorChanged;
+                
+        }
+
+        public override void OnNetworkDespawn()
+        {
+            base.OnNetworkDespawn();
+            
+            m_NetworkedColor.OnValueChanged -= OnClientColorChanged;
+            
+        }
 
         void Update()
         {
@@ -48,6 +73,7 @@ namespace Unity.Netcode.Samples.MultiplayerUseCases.RPC
              */
             string redactedMessage = OnServerFilterBadWords(message);
             ClientMoodMessageReceivedRpc(redactedMessage);
+            m_NetworkedColor.Value = MultiplayerUseCasesUtilities.GetRandomColor();
         }
 
         string OnServerFilterBadWords(string message)
@@ -74,14 +100,9 @@ namespace Unity.Netcode.Samples.MultiplayerUseCases.RPC
             m_SpeechBubble.Hide();
         }
 
-        public override void OnNetworkDespawn()
+        void OnClientColorChanged(Color32 previousColor, Color32 newColor)
         {
-            base.OnNetworkDespawn();
-            if (m_SpeechBubble)
-            {
-                m_SpeechBubble.Hide();
-                Destroy(m_SpeechBubble.gameObject);
-            }
+            m_Material.color = newColor;
         }
     }
 }
